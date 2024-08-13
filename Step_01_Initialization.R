@@ -20,7 +20,7 @@ library('plyr')
 # for any new code writing you MUST preface all functions with dplyr:: or plyr:: so R does not get confused. 
 # in particular "count" and "summarize" functions are found in both packages and throughout all scripts.
 
-#Load the following packages to read in SDE database
+#Load the following packages to read in Rest Service database
 #Load sf to read tables in file geodatabase
 library('sf')
 library('arcgisbinding')
@@ -160,4 +160,42 @@ if (dbType == 'SDE'){
 DF_ReachInfo <- ReadTable(TableName=sampledReaches, PointIDs=pointIDs, Years=years, Projects=projects, ProtocolTypes=protocolTypes)
 # get a list of unique Evaluation IDs from ReachInfoDF
 uniqueEvalIDs = as.list(unique(DF_ReachInfo['EvaluationID']))[[1]]
+
+
+#############################################################################
+
+######                 Specify additional data sources                     ######   
+
+#############################################################################
+
+
+# ReachInfoSpatial
+# Used in Reach Info and Sinuosity
+# read in F_sampled reaches separately because ReadTable function strips off the spatial data
+if(dbType=="FGDB"){
+  ReachInfoSpatial<-sf::st_read(fgdbPath,layer=sampledReaches)
+}else{
+  ReachInfoSpatial<-arc_select(get_layer(arc_open(RSPath),id=2,))
+}  
+# project the layer to USGS equal area conic
+ReachInfoSpatial<-sf::st_transform(ReachInfoSpatial,crs=5070)
+
+
+
+# Ecoregion
+# Used in final part of Step 2 - to attribute ecoregional groups to each reach
+if(dbType=="FGDB"){
+  EcoregionSpatial<-sf::st_read(fgdbPath,layer=ecoregion)
+}else{
+  EcoregionSpatial<-arc_select(get_layer(arc_open(RSPath),id=4,))
+}
+EcoregionSpatial<-sf::st_transform(EcoregionSpatial,crs=5070)
+
+# All Indicators
+# Used to compare indicators across years. Only necessary if computing historic indicators
+allindicators<-arc_select(get_layer(arc_open(RSPath), id=0))
+
+
+
+
 
