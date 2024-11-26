@@ -14,16 +14,18 @@ LwdWB<-subset(LwdWB,EvaluationID!="BA-TR-1180_2021-08-08")
 #Our method could over estimate wood though...crews may have evaluated sections of the thalweg but not recorded a wood value because they forgot or something else
 #However not all crews collecting thalweg in future and may not be able to get thalweg depths where you could get wood...we probably could use another parameter that is collected at all thalweg stations (side channel presence- but did not collect this in 2016) 
 TRCHLEN <-ReadTable(TableName = sampledReaches, TableFields = c('EvaluationID','ProtocolReachLength'),EvaluationIDs = uniqueEvalIDs)
-TRCHLEN<-subset(TRCHLEN, select = -c(geometry))
+#TRCHLEN<-subset(TRCHLEN, select = -c(geometry))
 
 # wood size classes differ between boatable and wadeable protocols so need protocol type
 protocols_evalIDs <-ReadTable(TableName = sampledReaches, TableFields = c('EvaluationID','ProtocolType'),EvaluationIDs = uniqueEvalIDs)
-protocols_evalIDs<-subset(protocols_evalIDs, select = -c(geometry))
+#protocols_evalIDs<-subset(protocols_evalIDs, select = -c(geometry))
 #protocols_evalIDs$ProtocolType=ifelse(protocols_evalIDs$EvaluationID %in% c('FA-RV-10930_2021-07-10','GJ-RV-10189_2021-07-12',	'MN-RO-1090_2021-07-27',	'CR-RV-10109_2021-07-13',	'RG-RV-10082_2021-07-07',	'TA-RV-10994_2021-06-05',	'TA-RV-12514_2021-07-09',	'KR-RV-12809_2021-07-14',	'MS-RM-3073_2021-05-30',	'MN-RO-1083_2021-07-26',	'CR-TR-11754_2021-07-14',	'TA-RV-11746_2021-07-08',	'TA-RV-10210_2021-07-08',	'UC-TR-13848_2021-07-11',	'FA-RV-13554_2021-07-11'),"Boatable",'Wadeable')
 # add protocol to LwdWB
 LwdWB <- merge(LwdWB, protocols_evalIDs, by='EvaluationID')
 LwdWB<- LwdWB[,!(names(LwdWB) %in% c('created_date','created_user','last_edited_user','last_edited_date'))]
 LwdWB$WoodLocation<- ifelse(LwdWB$WoodLocation=="BridgingAboveBankfullChannel","Bridging Above Bankfull Channel",ifelse(LwdWB$WoodLocation=="WithinBankfullChannel","Within Bankfull Channel",LwdWB$WoodLocation))
+#LwdWB<- LwdWB %>% select (1:24)# use this if getting error with geometry
+
 
 ### Additional Wood data formating
 # much easier to pivot data into one column for all wood counts rather than suming across columns and rows
@@ -49,16 +51,20 @@ merged_largewood <- merge(LargeWood_per_EvalID, Largewood_sample_size__per_EvalI
 #### Large Wood Frequency ####
 # LargeWoodFreq= EPA C1WM100- (Cummulative count of LWD in bankfull channel across all size classes)/(Reach Length) units are pieces/100m
 
+# Corrected these calculations in December 2024 to address differences in boatable versus wadeable. 
+
 # Merge counts with the reach length
 LargeWood_per_EvalID <- merge(merged_largewood, TRCHLEN, by='EvaluationID')
 # get the number of transects per EvaluationID for which large wood was collected (CountTran)
 # get the number of unique EvaluationID+Transect - transect names may appear twice if an X transect was present
-unique_eval_transects <- unique(Lwd_pivot[, c('EvaluationID', 'Transect')])
+unique_eval_transects <- unique(Lwd_pivot[, c('EvaluationID', 'Transect', 'ProtocolType')])
 CountTran <- unique_eval_transects %>% dplyr::count(EvaluationID, name='CountTran')
 # merge the CountTran in - needed for frequency computation
 LargeWood_per_EvalID <- merge(LargeWood_per_EvalID, CountTran, by='EvaluationID')
-# Compute large wood reach length. There are 10 transects so divide the total reach length by 10 and then multiply by the number of transects in the dataset
-LargeWood_per_EvalID$LWD_ReachLength<-LargeWood_per_EvalID$CountTran * (LargeWood_per_EvalID$ProtocolReachLength/10)
+# Compute large wood reach length. For wadeable, there are 10 transects so divide the total reach length by 10 and then multiply by the number of transects in the dataset
+# For boatable the length measured = 110 (11 transects x 10 meter plots)
+LargeWood_per_EvalID$LWD_ReachLength<- ifelse(LargeWood_per_EvalID$ProtocolType=="Wadeable",LargeWood_per_EvalID$CountTran * (LargeWood_per_EvalID$ProtocolReachLength/10),
+                                              ifelse(LargeWood_per_EvalID$ProtocolType=="Boatable",LargeWood_per_EvalID$CountTran * (110/11), NA))
 # compute the frequency - pieces of wood divided by the length of the reached assessed for wood and round to 3 digits multiply by 100 to get pieces per 100 m reach
 LargeWood_per_EvalID$LargeWoodFreq_CHECK <- round(100 * (LargeWood_per_EvalID$LargeWoodCount_CHECK / LargeWood_per_EvalID$LWD_ReachLength),3)
 
@@ -124,7 +130,7 @@ LargeWood_per_EvalID <- merge(LargeWood_per_EvalID, LargeWood_volume_per_EvalID,
 LargeWood_per_EvalID$LargeWoodVol_CHECK<-round((LargeWood_per_EvalID$LargeWoodVolSum/LargeWood_per_EvalID$LWD_ReachLength)*100,3)
 
 # add protocol back in and add a year column
-LargeWood_per_EvalID<- merge(LargeWood_per_EvalID,protocols_evalIDs, by='EvaluationID')
+#LargeWood_per_EvalID<- merge(LargeWood_per_EvalID,protocols_evalIDs, by='EvaluationID')
 date_split <- data.frame(do.call('rbind', strsplit(as.character(LargeWood_per_EvalID$EvaluationID), '_', fixed=TRUE)))
 LargeWood_per_EvalID$Year <- format(as.Date(date_split$X2, format='%Y-%m-%d'), '%Y')
 
@@ -155,5 +161,5 @@ names(DF_LargeWood)[names(DF_LargeWood)=="nLargeWood_CHECK_AboveChan"]<-"n_LgWoo
 names(DF_LargeWood)[names(DF_LargeWood)=="nLargeWood_CHECK_InChan"]<-"n_LgWoodInChan_CHECK"
 
 
-#write.csv(LargeWoodDF,'DF_LargeWood.csv')
+#write.csv(DF_LargeWood,'DF_LargeWood.csv')
  
