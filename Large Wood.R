@@ -61,6 +61,7 @@ unique_eval_transects <- unique(Lwd_pivot[, c('EvaluationID', 'Transect', 'Proto
 CountTran <- unique_eval_transects %>% dplyr::count(EvaluationID, name='CountTran')
 # merge the CountTran in - needed for frequency computation
 LargeWood_per_EvalID <- merge(LargeWood_per_EvalID, CountTran, by='EvaluationID')
+LargeWood_per_EvalID <- merge(LargeWood_per_EvalID, protocols_evalIDs, by='EvaluationID')
 # Compute large wood reach length. For wadeable, there are 10 transects so divide the total reach length by 10 and then multiply by the number of transects in the dataset
 # For boatable the length measured = 110 (11 transects x 10 meter plots)
 LargeWood_per_EvalID$LWD_ReachLength<- ifelse(LargeWood_per_EvalID$ProtocolType=="Wadeable",LargeWood_per_EvalID$CountTran * (LargeWood_per_EvalID$ProtocolReachLength/10),
