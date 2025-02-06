@@ -49,7 +49,7 @@ merged_largewood <- merge(LargeWood_per_EvalID, Largewood_sample_size__per_EvalI
 
 
 #### Large Wood Frequency ####
-# LargeWoodFreq= EPA C1WM100- (Cummulative count of LWD in bankfull channel across all size classes)/(Reach Length) units are pieces/100m
+# LargeWoodFreq= EPA C1WM100- (Cumulative count of LWD in bankfull channel across all size classes)/(Reach Length) units are pieces/100m
 
 # Corrected these calculations in December 2024 to address differences in boatable versus wadeable. 
 
