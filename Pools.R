@@ -51,7 +51,7 @@ DF_Pools$PctPools_CHECK <- ifelse(DF_Pools$PoolsCollected=='Collected No Pools P
 DF_Pools$PctPools_CHECK <- ifelse(DF_Pools$PoolsCollected=='No Flow Not Collected',NA,DF_Pools$PctPools_CHECK)
 DF_Pools$PoolFreq_CHECK <- ifelse(DF_Pools$PoolsCollected=='Collected No Pools Present',0,DF_Pools$PoolFreq_CHECK)
 DF_Pools$PoolFreq_CHECK <- ifelse(DF_Pools$PoolsCollected=='No Flow Not Collected',NA,DF_Pools$PoolFreq_CHECK)
-DF_Pools$ResPoolDepthAvg_CHECK <- ifelse(DF_Pools$PoolsCollected=='Collected No Pools Present',NA,DF_Pools$ResPoolDepthAvg_CHECK)
+DF_Pools$ResPoolDepthAvg_CHECK <- ifelse(DF_Pools$PoolsCollected=='Collected No Pools Present',0,DF_Pools$ResPoolDepthAvg_CHECK)
 DF_Pools$ResPoolDepthAvg_CHECK <- ifelse(DF_Pools$PoolsCollected=='No Flow Not Collected',NA,DF_Pools$ResPoolDepthAvg_CHECK)
 DF_Pools$PoolCount_CHECK <- ifelse(DF_Pools$PoolsCollected=='Collected No Pools Present',0,DF_Pools$PoolCount_CHECK)
 DF_Pools$PoolCount_CHECK <- ifelse(DF_Pools$PoolsCollected=='No Flow Not Collected',NA,DF_Pools$PoolCount_CHECK)
