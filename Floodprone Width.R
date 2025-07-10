@@ -34,8 +34,7 @@ DF_Entrenchment <- dplyr::full_join(riffle1, riffle2, by = 'EvaluationID')
 #             Width: Depth                               #
 ##########################################################
 # This method was added in September 2024.
-# This calculated the W:D at the transects where the two floodprone width measurements were taken and then averaged across those transects
-# Where only one FPW was taken, the W:D measurement for that one transect is reported
+# This calculated the W:D at the transects where the two floodprone width measurements were taken. this ensures the measurement was taken at a riffle.
 # This is different from Rosgen in that we don't measure an average water depth at the transect, only a max depth, so our W:D will be lower than Rosgen's
 # FPW measurements are supposed to be taken at representative riffles at the top and bottom of the reach which makes them great candidates for W:D
 # The other option would have been to use transect data and try to exclude transects with pools, but we wouldn't be sure we were getting riffle segments ro that the transects were representatve of the reach.
@@ -50,11 +49,5 @@ WD2 <- FloodWidth[FloodWidth$Riffle == 2, ]
 WD2$WidthToDepthRiffle2_CHECK=WD2$FloodproneBankfullWidth/(WD2$FloodproneBankfullHeight+WD2$FloodproneMaxWaterDepth)
 WD2<- WD2 %>% dplyr::select(c('EvaluationID', 'WidthToDepthRiffle2_CHECK'))
 
-# Calculate average W:D 
-# Join WD1 and WD2
-WD<-dplyr::full_join(WD1, WD2, by = 'EvaluationID')
-WD$WidthToDepthAvg_CHECK <- rowMeans(WD[ , c(2,3)], na.rm=TRUE)
-DF_WidthToDepth<-WD
-#write.csv(DF_WidthToDepth,'DF_WidthToDepth.csv')
 
 
