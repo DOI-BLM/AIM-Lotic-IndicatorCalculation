@@ -139,6 +139,9 @@ IndicatorsFinal=indicatorXwalk(data.input,data.xwalk)
 IndicatorsFinal<-data.frame(lapply(IndicatorsFinal, as.character), stringsAsFactors=FALSE)
 write.csv(IndicatorsFinal,paste0(OutPath,'I_Indicators',"_",Sys.Date(),'.csv'),na="",row.names=FALSE)
 
+#Store for conditions
+IndicatorsStep3<-IndicatorsFinal
+
 ###################################################################################################################
 
 ##############                        Historic Data             #################

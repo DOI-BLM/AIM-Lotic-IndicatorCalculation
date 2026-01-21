@@ -46,6 +46,11 @@ AdminUnits<-sf::st_read("...adminunits.gdb")
 #project the layer to USGS equal area conic (points and admin unit boundaries must be in same projection for join below to work)
 AdminUnits<-sf::st_transform(AdminUnits,crs=5070)
 
+# All Indicators
+# Used to compare indicators across years. Only necessary if computing historic indicators
+allindicators<-arc_select(get_layer(arc_open(RSPath), id=0))
+#allindicators<-arc.select(arc.open("AIM_Lotic__I_Indicators_evw"))
+
 
 #############################################################################
 

@@ -1,6 +1,8 @@
 ##########################################################
 #                Get Flood Prone Width Data             #
 ##########################################################
+#                Get Flood Prone Width Data             #
+##########################################################
 #read in FloodproneWidth_W
 #Floodprone width
 FloodWidth <- ReadTable(TableName = FloodProneWidth, EvaluationIDs = uniqueEvalIDs)
@@ -41,13 +43,14 @@ DF_Entrenchment <- dplyr::full_join(riffle1, riffle2, by = 'EvaluationID')
 
 # W:D for Riffle  1
 WD1 <- FloodWidth[FloodWidth$Riffle == 1, ]
-WD1$WidthToDepthRiffle1_CHECK=WD1$FloodproneBankfullWidth/(WD1$FloodproneBankfullHeight+WD1$FloodproneMaxWaterDepth)
+WD1$WidthToDepthRiffle1_CHECK=round(WD1$FloodproneBankfullWidth/(WD1$FloodproneBankfullHeight+WD1$FloodproneMaxWaterDepth), digits=2)
 WD1<- WD1 %>% dplyr::select(c('EvaluationID', 'WidthToDepthRiffle1_CHECK'))
 
 # W:D for Riffle  2
 WD2 <- FloodWidth[FloodWidth$Riffle == 2, ]
-WD2$WidthToDepthRiffle2_CHECK=WD2$FloodproneBankfullWidth/(WD2$FloodproneBankfullHeight+WD2$FloodproneMaxWaterDepth)
+WD2$WidthToDepthRiffle2_CHECK=round(WD2$FloodproneBankfullWidth/(WD2$FloodproneBankfullHeight+WD2$FloodproneMaxWaterDepth), digits=2)
 WD2<- WD2 %>% dplyr::select(c('EvaluationID', 'WidthToDepthRiffle2_CHECK'))
-
-
+#Join back to DF_Entrenchment
+DF_Entrenchment<-dplyr::full_join(DF_Entrenchment, WD1, by='EvaluationID')
+DF_Entrenchment<-dplyr::full_join(DF_Entrenchment, WD2, by='EvaluationID')
 

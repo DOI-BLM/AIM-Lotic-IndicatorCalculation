@@ -26,7 +26,8 @@ library('sf')
 library('arcgisbinding')
 arc.check_product()
 library('arcgis')
-
+# token<-auth_binding()
+# set_arc_token()
 ##############################################################################
 
 ######        Specify the location of all the subsequent R scripts      ######
@@ -51,67 +52,67 @@ if(dbType=="SDE"|dbType=="FGDB"){
 ##################################################################################################################
 # Specify table names so that table names can change as needed and only this script will need changed if tables names change
 # field names however, appear throughout scripts
-ecoregion<-'LU_Ecoregion'
-points<-'D_Point'
-sampledReaches <- 'F_SampledReaches_W_B'
-nonSampledReaches<- 'F_NotSampledReaches_W_B' 
-channelDimensions_W <- 'F_ChannelDimensions_W'
-channelDimensions_B <- 'F_ChannelDimensions_B'
-canopyCover_W <- 'F_CanopyCover_W'
-canopyCover_B <- 'F_CanopyCover_B'
-vegComplexity <- 'F_VegComplexity_W_B'
-vegSpeciesWB <- 'F_VegSpecies_W_B'
-speciesMetadata <- 'LU_SpeciesMetadata'
-stateSpeciesList<- 'LU_StateSpeciesList'
-WQMacroInvert <- 'F_WaterQualityMacroInvert_W_B'
-slope_W <- 'F_Slope_W'
-pools_w <- 'F_Pools_W'
-largeWood_w_b <- 'F_LargeWood_W_B'
-streambedParticles_w <- 'F_StreambedParticles_W'
-PoolTailFines_W <- 'F_PoolTailFines_W'
-bank_w <- 'F_Bank_W'
-bank_b <- 'F_Bank_B'
-FishCover_W_B <- 'F_FishCover_W_B'
-FloodProneWidth <- 'F_FloodproneWidth_W_B'
-SlopePoolSummary <- 'F_SlopePoolSummary_W'
-HumanInfluence <- 'F_HumanInfluence_W_B'
-ThalwegW <- 'F_Thalweg_W'
-ThalwegSBP <- 'F_Thalweg_StreambedParticles_B'
-indicators <- 'I_Indicators'
-photos<-"F_Photos_W_B"
+ecoregion<-'AIM_Lotic__LU_Ecoregion'
+points<-'AIM_Lotic__D_Point'
+sampledReaches <- 'AIM_Lotic__F_SampledReaches_W_B'
+nonSampledReaches<- 'AIM_Lotic__F_NotSampledReaches_W_B' 
+channelDimensions_W <- 'AIM_Lotic__F_ChannelDimensions_W'
+channelDimensions_B <- 'AIM_Lotic__F_ChannelDimensions_B'
+canopyCover_W <- 'AIM_Lotic__F_CanopyCover_W'
+canopyCover_B <- 'AIM_Lotic__F_CanopyCover_B'
+vegComplexity <- 'AIM_Lotic__F_VegComplexity_W_B'
+vegSpeciesWB <- 'AIM_Lotic__F_VegSpecies_W_B'
+speciesMetadata <- 'AIM_Lotic__LU_SpeciesMetadata'
+stateSpeciesList<- 'AIM_Lotic__LU_StateSpeciesList'
+WQMacroInvert <- 'AIM_Lotic__F_WaterQualityMacroInvert_W_B'
+slope_W <- 'AIM_Lotic__F_Slope_W'
+pools_w <- 'AIM_Lotic__F_Pools_W'
+largeWood_w_b <- 'AIM_Lotic__F_LargeWood_W_B'
+streambedParticles_w <- 'AIM_Lotic__F_StreambedParticles_W'
+PoolTailFines_W <- 'AIM_Lotic__F_PoolTailFines_W'
+bank_w <- 'AIM_Lotic__F_Bank_W'
+bank_b <- 'AIM_Lotic__F_Bank_B'
+FishCover_W_B <- 'AIM_Lotic__F_FishCover_W_B'
+FloodProneWidth <- 'AIM_Lotic__F_FloodproneWidth_W_B'
+SlopePoolSummary <- 'AIM_Lotic__F_SlopePoolSummary_W'
+HumanInfluence <- 'AIM_Lotic__F_HumanInfluence_W_B'
+ThalwegW <- 'AIM_Lotic__F_Thalweg_W'
+ThalwegSBP <- 'AIM_Lotic__F_Thalweg_StreambedParticles_B'
+indicators <- 'AIM_Lotic__I_Indicators'
+photos<-"AIM_Lotic__F_Photos_W_B"
 
 # Specify table names so that table names can change as needed and only this script will need changed if tables names change
 # field names however, appear throughout scripts
 # if using rest Service, use the id
 if (dbType == 'RS'){
-ecoregion<-4
-#points<-'D_Point'
-sampledReaches <- 2
-nonSampledReaches<- 3 
-channelDimensions_W <- 10
-channelDimensions_B <- 9
-canopyCover_W <- 8
-canopyCover_B <- 7
-vegComplexity <- 24
-vegSpeciesWB <- 25
-speciesMetadata <- 27
-stateSpeciesList<- 28
-WQMacroInvert <- 26
-slope_W <- 19
-pools_w <- 17
-largeWood_w_b <- 15
-streambedParticles_w <- 21
-PoolTailFines_W <- 18
-bank_w <- 6
-bank_b <- 5
-FishCover_W_B <- 12
-FloodProneWidth <- 13
-SlopePoolSummary <- 20
-HumanInfluence <- 14
-ThalwegW <- 23
-ThalwegSBP <- 22
-indicators <- 0
-#photos<-"F_Photos_W_B"
+  ecoregion<-4
+  #points<-'D_Point'
+  sampledReaches <- 2
+  nonSampledReaches<- 3 
+  channelDimensions_W <- 10
+  channelDimensions_B <- 9
+  canopyCover_W <- 8
+  canopyCover_B <- 7
+  vegComplexity <- 24
+  vegSpeciesWB <- 25
+  speciesMetadata <- 27
+  stateSpeciesList<- 28
+  WQMacroInvert <- 26
+  slope_W <- 19
+  pools_w <- 17
+  largeWood_w_b <- 15
+  streambedParticles_w <- 21
+  PoolTailFines_W <- 18
+  bank_w <- 6
+  bank_b <- 5
+  FishCover_W_B <- 12
+  FloodProneWidth <- 13
+  SlopePoolSummary <- 20
+  HumanInfluence <- 14
+  ThalwegW <- 23
+  ThalwegSBP <- 22
+  indicators <- 0
+  #photos<-"F_Photos_W_B"
 }
 
 
@@ -194,7 +195,7 @@ EcoregionSpatial<-sf::st_transform(EcoregionSpatial,crs=5070)
 # All Indicators
 # Used to compare indicators across years. Only necessary if computing historic indicators
 allindicators<-arc_select(get_layer(arc_open(RSPath), id=0))
-
+#allindicators<-arc.select(arc.open("\\\\blm\\dfs\\loc\\GBP\\OC\\projects\\AIM\\DataAndTools\\SDE\\oc_pub_osa.sde\\ILMOCDO.AIM_Lotic__I_Indicators_evw"))
 
 
 
